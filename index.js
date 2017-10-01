@@ -16,7 +16,7 @@ module.exports = function updateDiff (obj, diff, mappers) {
 	for (var i = 0, l = mappers.length; i < l; i++) {
 		var dict = mappers[i]
 		for (var prop in dict) {
-			if (prop in raw && (raw[prop] === diff[prop] || obj[prop] === diff[prop])) continue
+			if (prop in raw && !Array.isArray(diff[prop]) && (raw[prop] === diff[prop] || obj[prop] === diff[prop])) continue
 
 			if (prop in diff) {
 				var result
