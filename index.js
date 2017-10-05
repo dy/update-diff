@@ -24,7 +24,7 @@ module.exports = function updateDiff (obj, diff, mappers) {
 				if (dict[prop] === true) result = diff[prop]
 				else if (dict[prop] === false) continue
 				else if (typeof dict[prop] === 'function') {
-					result = dict[prop](diff[prop], diff, obj)
+					result = dict[prop](diff[prop], obj, diff)
 					if (result === undefined) continue
 				}
 
