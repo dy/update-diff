@@ -1,6 +1,6 @@
 {
   "name": "update-diff",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Update object by mapping diff properties",
   "main": "index.js",
   "scripts": {
