@@ -4,12 +4,18 @@
 
 'use strict'
 
-var cache = new WeakMap;
+var cache = global.WeakMap ? new WeakMap : null;
 
 module.exports = function updateDiff (obj, diff, mappers) {
-	var raw = cache.get(obj) || {}
+	var raw
 
-	cache.set(obj, diff)
+	if (cache) {
+		raw = cache.get(obj) || {}
+		cache.set(obj, diff)
+	}
+	else {
+		raw = {}
+	}
 
 	if (!Array.isArray(mappers)) mappers = [].slice.call(arguments, 2)
 
