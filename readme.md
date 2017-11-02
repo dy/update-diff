@@ -1,32 +1,45 @@
 # update-diff [![unstable](https://img.shields.io/badge/stability-unstable-green.svg)](http://github.com/badges/stability-badges)
 
-Update object by mapping differences in order. Comes handy for organizing state updating.
+Update object by mapping differences with another object. Comes handy for updating state.
 
 [![npm install update-diff](https://nodei.co/npm/update-diff.png?mini=true)](https://npmjs.org/package/update-diff/)
 
 ```js
 let prop = require('update-diff')
 
-let state = {propA: 0, propB: 1, propC: ['foo'], propD: 'bar'}
+let state = {}
+let options = {propA: 0, propB: 1, propC: ['foo'], propD: 'bar'}
 
-updateDiff(state, modifications, [
-//initial mapping
+updateDiff(state, options, [
+//first pass mapping
 {
-	propA: value => value,
-	propB: true,
-	propC: Array.isArray
+  propA: value => value,
+  propB: true,
+  propC: Array.isArray,
+  propD: function () {}
 },
-//second-pass mapping
+//second pass mapping
 {
-	propX: (x, state) => state.propB + x
+  propX: (x, state) => state.propB + x
 },
-//third-pass mapping
+//third pass mapping
 {
-	propA: (value, state) => state.propA ? 'a' : 'b'
+  propA: (value, state, options) => state.propA ? 'a' : 'b'
 }
 ])
 
-// {propB: 1, propC: ['foo']}
+// {propA: 0, propB: 1, propC: ['foo']}
+```
+
+If property mapper returns any value other than `undefined`, it is used for new value. Undefined value preserves state. Only primitives get compared in diffing, to compare arrays you have to do it manually:
+
+```js
+update(state, opts, {
+	positions: (p, state) => {
+		if (p.length === state.positions) return
+		return p
+	}
+})
 ```
 
 ## Related
