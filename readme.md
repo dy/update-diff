@@ -7,6 +7,33 @@ Update object by mapping differences with another object. Comes handy for updati
 ```js
 let prop = require('update-diff')
 
+let state = {id: 1, values: [1, 2, 3]}
+
+updateDiff(state, {id: 5, values: ['1', '2']}, {
+  values: v => {
+    if (!v || v.length) throw 'values should be an array-like'
+    return Array.from(v, v => parseFloat(v))
+  },
+  id: id => id
+})
+
+// {id: 5, values: [1, 2]}
+```
+
+If property mapper returns any value other than `undefined`, it is used for new value. `undefined` keeps state property unchanged. Only primitives get compared in diffing, to compare arrays you have to do it manually:
+
+```js
+update(state, opts, {
+	positions: (p, state) => {
+		if (p.length === state.positions.length) return
+		return p
+	}
+})
+```
+
+To do multipass update, use array of mappers:
+
+```js
 let state = {}
 let options = {propA: 0, propB: 1, propC: ['foo'], propD: 'bar'}
 
@@ -29,17 +56,6 @@ updateDiff(state, options, [
 ])
 
 // {propA: 0, propB: 1, propC: ['foo']}
-```
-
-If property mapper returns any value other than `undefined`, it is used for new value. Undefined value preserves state. Only primitives get compared in diffing, to compare arrays you have to do it manually:
-
-```js
-update(state, opts, {
-	positions: (p, state) => {
-		if (p.length === state.positions) return
-		return p
-	}
-})
 ```
 
 ## Related
